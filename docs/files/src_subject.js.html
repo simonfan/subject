@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/subject.js - subject</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="subject"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 0.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/__base.html">__base</a></li>
+            
+                <li><a href="../classes/__subject.html">__subject</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/subject.html">subject</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src/subject.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+//     subject
+//     (c) simonfan
+//     subject is licensed under the MIT terms.
+
+/**
+ * Expressive prototypal inheritance.
+ *
+ * @module subject
+ */
+
+/* jshint ignore:start */
+if (typeof define !== &#x27;function&#x27;) { var define = require(&#x27;amdefine&#x27;)(module) }
+/* jshint ignore:end */
+
+define([&#x27;lodash&#x27;], function (_) {
+	&#x27;use strict&#x27;;
+
+	/**
+	 * The original base object.
+	 * 
+	 * @class __base
+	 * @static
+	 */
+	var __base = {
+		/**
+		 * This method will be called before returning
+		 * the instance. Put your initialization code here.
+		 * 
+		 * @method initialize
+		 */
+		initialize: function () {},
+
+		/**
+		 * Takes any number of objects as arguments
+		 * and extend the values to this one.
+		 * Overwrite this property to have new behaviour
+		 * on the next extension.
+		 * 
+		 * @method extend
+		 */
+		extend: function () {
+			var args = Array.prototype.slice.call(arguments);
+			args.unshift(this);
+			_.extend.apply(_, args);
+
+			return this;
+		}
+	};
+
+	/**
+	 * Returns an instance of the __base object.
+	 * 
+	 * This function is a simplified equivalent of
+	 * the one returned by &#x60;__subject.define&#x60;.
+	 * The only difference is that initialize method is not invoked.
+	 * 
+	 * @class __subject
+	 * @constructor
+	 */
+	var __subject = function subject() {
+		return Object.create(__base);
+	};
+
+	/**
+	 * The base object.
+	 * When the __subject function is run, it will
+	 * create an instance of &#x60;this.base&#x60; and call its
+	 * initialize method.
+	 * 
+	 * @property base
+	 * @type object
+	 */
+	__subject.base = __base;
+
+
+	/**
+	 * Define a function that when run will return an instance
+	 * of its base object.
+	 * 
+	 * All arguments passed to the extend method
+	 * will be passed on to &#x60;this.base.extend&#x60; method.
+	 * 
+	 * @method extend
+	 */
+	__subject.extend = function extend() {
+
+		// [1] Create an instance of &#x27;this.base&#x27;
+		var newbase = Object.create(this.base);
+
+		// [2] Call &#x27;newbase.extend&#x27; passing it all the arguments
+		//     with which extend was called.
+		//     The &#x27;extend&#x27; method is extend
+		newbase.extend.apply(newbase, arguments);
+
+		// [3] Create a builder function 
+		//     that creates an instance of the base object
+		//     and initializes it.
+		var builder = function builder() {
+			var instance = Object.create(newbase);
+			instance.initialize.apply(instance, arguments);
+
+			return instance;
+		};
+
+		// [4] Set the builder function&#x27;s base property
+		//     to reference the &#x60;newbase&#x60;, so that the new base may be 
+		//     further extended.
+		builder.base = newbase;
+
+		// [5] Define an extend
+		builder.extend = this.extend;
+
+		// some aliases
+		builder.define = builder.extend;
+
+		return builder;
+	};
+
+	// aliases
+	__subject.define = __subject.extend;
+
+	return __subject;
+});
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

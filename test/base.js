@@ -1,133 +1,232 @@
-'use strict';
+(function(name, factory) {
 
-var should = require('should');
+	var mod = typeof define !== 'function' ?
+		// node
+		'../src/subject' :
+		// browser
+		'subject',
+		// dependencies for the test
+		deps = [mod, 'should'];
 
-var subject = require('../src/subject');
+	if (typeof define !== 'function') {
+		// node
+		factory.apply(null, deps.map(require));
+	} else {
+		// browser
+		define(deps, factory);
+	}
 
-describe('inheritance', function () {
-	beforeEach(function (done) {
-		done();
-	});
+})('test', function(subject, should) {
+	'use strict';
 
-	it('returns an object', function () {
 
-		var b = subject();
 
-		b.should.be.type('object');
+	describe('person = subject.define({ *methods for person objects* })', function () {
 
-	});
-
-	it('... that has an extend method', function () {
-		var b = subject();
-
-		b.extend.should.be.type('function');
-
-		// extend should basically set stuff on the object
-		b.extend({
-			name: 'Simon',
-			sayName: function () {
-				return 'My name is ' + this.name;
-			}
-		});
-
-		b.name.should.eql('Simon');
-		b.sayName().should.eql('My name is ' + b.name);
-	});
-
-	it('... that has a \'base\' property and a \'define\' method', function() {
-		var anotherSubject = subject.define();
-
-		anotherSubject.base.should.be.type('object');
-		anotherSubject.define.should.be.type('function');
-	});
-
-	it('basic subject', function() {
-		var person = subject.define({
-				initialize: function(data) {
+		beforeEach(function () {
+			this.personMethods = {
+				initialize: function (data) {
 					this.name = data.name;
 				},
 
-				introduceSelf: function () {
+				sayName: function () {
 					return 'My name is ' + this.name;
-				}
-			});
-
-		var simon = person({
-			name: 'Simon'
-		});
-
-		simon.should.eql({
-			name: 'Simon'
-		});
-
-		simon.introduceSelf().should.eql('My name is Simon');
-
-	});
-
-	it('the fire test: inheritance chain', function () {
-		var person = subject.define({
-				initialize: function(data) {
-					this.name = data.name;
 				},
 
 				introduceSelf: function () {
-					return 'My name is ' + this.name;
-				}
-			}),
-
-			musician = person.define({
-				initialize: function(data) {
-					person.base.initialize.apply(this, arguments);
-
-					this.style = data.style;
+					return this.sayName() + ' I am somebody.';
 				},
+			};
 
-				play: function () {
-					return '♭ ♭ ♭   ♭';
-				}
-			}),
+			this.person = subject.define(this.personMethods);
+		})
 
-			singer = musician.define({
-				initialize: function(data) {
-					musician.base.initialize.apply(this, arguments);
+		describe('person', function () {
 
-					this.song = data.song;
-				},
-
-				sing: function () {
-					return '♭ ' + this.song + ' ♭';
-				},
-
-				play: function () {
-					return 'Sorry... I can only sing';
-				}
+			it('is a function', function () {
+				this.person.should.be.type('function');
 			});
 
-		var simon = person({
-				name: 'Simon',
-			}),
-
-			guitarPlayer = musician({
-				name: 'Guitar Guy',
-				style: 'rock',
-			}),
-
-			louis = singer({
-				name: 'Louis',
-				song: 'I\'ve got the Heebie Jeebies bada baad',
+			it('has a `base` object property', function () {
+				this.person.base.should.be.type('object');
 			});
 
-		simon.should.have.property('name', 'Simon');
-		// simon is just a person, he cannot sing
-		simon.should.not.have.property('song');
-		simon.should.not.have.property('sing');
+			it('has a `define/extend` method', function () {
+				this.person.define.should.be.type('function');
+			});
 
-		guitarPlayer.play().should.eql('♭ ♭ ♭   ♭');
 
-		// now louis... wow
-		louis.should.have.property('name', 'Louis');
-		louis.should.have.property('song');
-		louis.sing().should.eql('♭ I\'ve got the Heebie Jeebies bada baad ♭');
-		louis.play().should.eql('Sorry... I can only sing');
+
+			describe('joe = person({ name: "Joe" })', function () {
+				beforeEach(function () {
+					this.joe = this.person({
+						name: 'Joe',
+					});
+				});
+
+				it('is an object', function () {
+					this.joe.should.be.type('object');
+				});
+
+				it('has methods defined on person subject definition', function () {
+					this.joe.sayName.should.be.type('function');
+
+					this.joe
+						.sayName().should.eql('My name is Joe');
+
+					this.joe
+						.introduceSelf().should.eql(this.joe.sayName() + ' I am somebody.');
+				});
+
+				it('should have methods on the prototype chain, not on itself', function () {
+					this.joe.should.not.have.ownProperty('sayName');
+					this.joe.should.have.ownProperty('name');
+				})
+			});
+
+		});
+
+		describe('musician = person.define({ *musician specific methods* )', function () {
+
+			beforeEach(function () {
+				var person = this.person;
+
+				this.musicianMethods = {
+					// overwrite initialize
+					initialize: function (data) {
+						// run person initialization
+						person.base.initialize.call(this, data);
+
+						// some further definitions
+						this.style = data.style;
+						this.instruments = data.instruments;
+					},
+
+					// overwrite introduceSelf
+					introduceSelf: function () {
+						return '♪ ' + this.sayName() + ' ♪';
+					},
+
+					play: function (instrument) {
+						var sounds = this.instruments[instrument] || 'sounds not so good';
+
+						return sounds;
+					},
+				};
+
+				this.musician = person.define(this.musicianMethods);
+			});
+
+
+			it('is also a function', function () {
+				this.musician.should.be.type('function');
+			});
+
+			it('has a `base` property', function () {
+				this.musician.base.should.be.type('object');
+			});
+
+			it('has a `define/extend` method', function () {
+				this.musician.define.should.be.type('function');
+				this.musician.extend.should.be.type('function');
+			});
+
+			describe('louis = musician(...), frank = musician(...)', function () {
+
+				beforeEach(function () {
+					this.louis = this.musician({
+						name: 'Louis Armstrong',
+						instruments: {
+							voice: '♬ ♫ ♪ ♩ ♭ La La La',
+							trumpet: '♪ ♩ ♭ ♫ ♪, ♪ ♩ ♭'
+						}
+					});
+
+					this.frank = this.musician({
+						name: 'Frank Sinatra',
+						instruments: {
+							voice: '♪ ♩ ♭ ♪ ♩ ♭ ♪ ♩ ♭',
+						}
+					})
+				});
+
+				it('is an object', function () {
+					this.louis.should.be.type('object');
+				});
+
+				it('has methods that are common to all person objects', function () {
+					this.louis.sayName.should.be.type('function');
+
+					this.louis.sayName()
+						.should.eql('My name is Louis Armstrong');
+				});
+
+				it('should have some methods overwritten', function () {
+					var louisIntro = this.louis.introduceSelf();
+
+					louisIntro.should.eql('♪ My name is Louis Armstrong ♪');
+
+					this.joe
+						.introduceSelf()
+							.should.not.eql(louisIntro);
+
+				});
+
+				it('has methods specific to musicians', function () {
+					this.louis.play.should.be.type('function');
+					this.louis
+						.play('voice')
+							.should.eql(this.musicianMethods.play.call(this.louis, 'voice'));
+				});
+
+				it('frank should be different from louis', function () {
+					this.louis.sayName().should.eql('My name is Louis Armstrong');
+					this.frank.sayName().should.eql('My name is Frank Sinatra');
+				})
+			});
+
+			describe('fred = person.extend(this.lawyerMethods)(* Fred data *)', function () {
+				beforeEach(function () {
+
+					var person = this.person;
+
+					this.lawyerMethods = {
+						initialize: function (data) {
+							person.base.initialize.apply(this, arguments);
+						},
+
+						introduceSelf: function () {
+							return 'My Lord, ' + this.sayName;
+						},
+
+						accuse: function() {
+							//whatever..
+						}
+					};
+
+					this.lawyer = person.extend(this.lawyerMethods);
+					this.fred = this.lawyer({ name: 'Fred, the lawyer'});
+				});
+
+				it('presents itself different from musicians or normal people', function () {
+					var frankIntro = this.frank.introduceSelf(),
+						joeIntro = this.joe.introduceSelf(),
+
+						fredIntro = this.fred.introduceSelf();
+
+					fredIntro.should.not.eql(frankIntro);
+
+					fredIntro.should.not.eql(joeIntro);
+				});
+
+				it('does not have musician methods', function () {
+					this.fred.should.not.have.property('play');
+					this.fred.should.have.property('accuse');
+				})
+			});
+
+		});
+
 	});
+
 });

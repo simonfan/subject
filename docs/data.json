@@ -3,9 +3,106 @@
         "name": "subject",
         "version": "0.0.0"
     },
-    "files": {},
-    "modules": {},
-    "classes": {},
-    "classitems": [],
+    "files": {
+        "src/subject.js": {
+            "name": "src/subject.js",
+            "modules": {
+                "subject": 1
+            },
+            "classes": {
+                "__base": 1,
+                "__subject": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "subject": {
+            "name": "subject",
+            "submodules": {},
+            "classes": {
+                "__base": 1,
+                "__subject": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/subject.js",
+            "line": 50,
+            "description": "Expressive prototypal inheritance."
+        }
+    },
+    "classes": {
+        "__base": {
+            "name": "__base",
+            "shortname": "__base",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "subject",
+            "namespace": "",
+            "file": "src/subject.js",
+            "line": 18,
+            "description": "The original base object.",
+            "static": 1
+        },
+        "__subject": {
+            "name": "__subject",
+            "shortname": "__subject",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "subject",
+            "namespace": "",
+            "file": "src/subject.js",
+            "line": 50,
+            "description": "Returns an instance of the __base object.\n\nThis function is a simplified equivalent of\nthe one returned by `__subject.define`.\nThe only difference is that initialize method is not invoked.",
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/subject.js",
+            "line": 25,
+            "description": "This method will be called before returning\nthe instance. Put your initialization code here.",
+            "itemtype": "method",
+            "name": "initialize",
+            "class": "__base",
+            "module": "subject"
+        },
+        {
+            "file": "src/subject.js",
+            "line": 33,
+            "description": "Takes any number of objects as arguments\nand extend the values to this one.\nOverwrite this property to have new behaviour\non the next extension.",
+            "itemtype": "method",
+            "name": "extend",
+            "class": "__base",
+            "module": "subject"
+        },
+        {
+            "file": "src/subject.js",
+            "line": 64,
+            "description": "The base object.\nWhen the __subject function is run, it will\ncreate an instance of `this.base` and call its\ninitialize method.",
+            "itemtype": "property",
+            "name": "base",
+            "type": "object",
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/subject.js",
+            "line": 76,
+            "description": "Define a function that when run will return an instance\nof its base object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.base.extend` method.",
+            "itemtype": "method",
+            "name": "extend",
+            "class": "__subject",
+            "module": "subject"
+        }
+    ],
     "warnings": []
 }
