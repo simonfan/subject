@@ -1,7 +1,7 @@
 {
   "name": "subject",
   "main": "src/subject.js",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Some module...",
   "dependencies": {
     "underscore.contains": "~0.0.1",
