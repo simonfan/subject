@@ -1,100 +1,58 @@
 # subject
 
-Wrap a value inside custom object with methods that take the
-wrapped value as first argument.
+Some sweet object definition, inheritance and instantiation in functional syntax.
 
-Inspired by (if not completely a copy of) underscore, lodash and Lazy.js 
-data wrapping functionality.
-
-
-## usage
 
 ``` javascript
+var subject = require('subject');
 
+// define person builder
+var person = subject.define({
 
-var data = {
-	name: 'Banana',
-	color: 'yellow'
-}
+		// This will be called on instantiation
+		initialize: function (data) {
+			this.name = data.name;
+		},
 
-var fruit = require('subject').define({
-		color: function() {
-			this.trigger('color-request');
+		// These are simple methods and prototype properties.
+		introduceSelf: function () {
+			return 'My name is ' + this.name
+		},
 
-			return this.color
+		walk: function () {
+			// 
 		}
 	});
 
-banana = fruit(data);
+// instantiate person
+var joe = person({ name: 'Joe Smith' });
 
-banana.color() // yellow
-
-
-
-/////////////////////
-
-var Person = require('subject').define({
-	introduce: function(data) {
-		return 'Hi, my name is ' + data.name;
-	},
-
-	set: function(data, value) {
-
-		data[prop] = value;
-	},
-});
-
-var ana = Person.create({
-	name: 'Ana'
-});
-
-ana.introduce() // returns 'Hi, my name is Ana'
-
-///////////////////////////////////////////////////
-var list = require('subject').define({
-	push: function (data, item) {
-		data.push(item);
-
-		this.trigger('push', item);
-
-		return this;
-	},
-
-	data: function(data) {
-		return data;
-	}
-});
+joe.introduceSelf() // My name is Joe Smith
 
 
-list([1, 2, 3, 4]).push(7).data();	// returns [1, 2, 3, 4, 7]
+// define musician builder, which should inherit from person
+var musician = person.define({
+		// Overwrite initialization
+		initialize: function (data) {
+			// call the person's
+			person.base.initialize.apply(this, arguments);
 
+			this.instruments = data.instrments;
+		},
 
-////////////////////////
-var encodedString = require('subject').define({
-	decode: function (str) {
-		return str.replace('!@#$', 'fuck');
-	}
-});
-
-var encodedString('!@#$ you!').decode();  // returns 'fuck you!'
-
-
-////////////////////
-var fancyConfigurations = require('subject').define({
-	isSomeSettingEnabled: function(data) {
-		return data.someSetting;
-	},
-
-	someOtherSetting: function(data, value) {
-		if (arguments.length === 2) {
-			data.someOtherSetting = value;
-		} else {
-			return data.someOtherSetting
+		play: function (instrument) {
+			return _.contains(this.instruments, instrument) ? '♬ ♫ ♪ ♩ ♭ La La La' : 'I can\'t play that!';
 		}
-	},
+	});
 
-	// getter for the value
-	someProperty: true
-});
+// instantiate musician
+var bob = musician({ name: 'Bob Dylan', instruments: ['guitar', 'voice', 'harmonica'] });
+
+// person methods
+bob.introduceSelf()    // My name is Bob Dylan
+
+// musician methods.
+bob.play('harmonica')  // ♬ ♫ ♪ ♩ ♭ La La La
+bob.play('trumpet')    // I can't play that!
 
 ```
