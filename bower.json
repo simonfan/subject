@@ -1,13 +1,9 @@
 {
   "name": "subject",
   "main": "src/subject.js",
-  "version": "0.0.0",
-  "description": "Some module...",
+  "version": "0.1.1",
+  "description": "Builder-function based object inheritance chain",
   "dependencies": {
-    "underscore.contains": "~0.0.1",
-    "document-matcher": "~0.1.0",
-    "underscore": "~1.5.2",
-    "eventemitter2": "~0.4.13",
     "lodash": "~2.4.1"
   },
   "devDependencies": {
