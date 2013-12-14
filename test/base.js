@@ -21,11 +21,11 @@
 
 
 
-	describe('person = subject.define({ *methods for person objects* })', function () {
+	describe('person = subject.extend({ *methods for person objects* })', function () {
 
 		beforeEach(function () {
 			this.personMethods = {
-				initialize: function (data) {
+				constructor: function (data) {
 					this.name = data.name;
 				},
 
@@ -38,7 +38,7 @@
 				},
 			};
 
-			this.person = subject.define(this.personMethods);
+			this.person = subject.extend(this.personMethods);
 		})
 
 		describe('person', function () {
@@ -48,16 +48,16 @@
 			});
 
 			it('has a `base` object property', function () {
-				this.person.base.should.be.type('object');
+				this.person.prototype.should.be.type('object');
 			});
 
-			it('has a `define/extend` method', function () {
-				this.person.define.should.be.type('function');
+			it('has an `extend` method', function () {
+				this.person.extend.should.be.type('function');
 			});
 
 
 
-			describe('joe = person({ name: "Joe" })', function () {
+			describe('joe = person({ name: "Joe" }) - function invocation', function () {
 				beforeEach(function () {
 					this.joe = this.person({
 						name: 'Joe',
@@ -84,18 +84,40 @@
 				})
 			});
 
+			describe('sara = new person({name: "Sara"}) - constructor invocation', function () {
+				beforeEach(function () {
+					this.sara = new this.person({
+						name: 'Sara',
+					})
+				});
+
+				it('is an object', function () {
+					this.sara.should.be.type('object');
+				});
+
+				it('has methods defined on person subject definition', function () {
+					this.sara.sayName.should.be.type('function');
+
+					this.sara.sayName()
+						.should.eql('My name is Sara');
+
+					this.sara.introduceSelf()
+						.should.eql(this.sara.sayName() + ' I am somebody.');
+				});
+			})
+
 		});
 
-		describe('musician = person.define({ *musician specific methods* )', function () {
+		describe('musician = person.extend({ *musician specific methods* )', function () {
 
 			beforeEach(function () {
 				var person = this.person;
 
 				this.musicianMethods = {
-					// overwrite initialize
-					initialize: function (data) {
-						// run person initialization
-						person.base.initialize.call(this, data);
+					// overwrite constructor
+					constructor: function (data) {
+						// run person constructortion
+						person.prototype.constructor.call(this, data);
 
 						// some further definitions
 						this.style = data.style;
@@ -114,7 +136,7 @@
 					},
 				};
 
-				this.musician = person.define(this.musicianMethods);
+				this.musician = person.extend(this.musicianMethods);
 			});
 
 
@@ -123,19 +145,18 @@
 			});
 
 			it('has a `base` property', function () {
-				this.musician.base.should.be.type('object');
+				this.musician.prototype.should.be.type('object');
 			});
 
-			it('has a `define/extend` method', function () {
-				this.musician.define.should.be.type('function');
+			it('has an `extend` method', function () {
 				this.musician.extend.should.be.type('function');
 			});
 
-			describe('louis = musician(...), frank = musician(...)', function () {
+			describe('ella = musician(...), frank = musician(...) - builder invocation', function () {
 
 				beforeEach(function () {
-					this.louis = this.musician({
-						name: 'Louis Armstrong',
+					this.ella = this.musician({
+						name: 'Ella Fitzgerald',
 						instruments: {
 							voice: '♬ ♫ ♪ ♩ ♭ La La La',
 							trumpet: '♪ ♩ ♭ ♫ ♪, ♪ ♩ ♭'
@@ -151,39 +172,51 @@
 				});
 
 				it('is an object', function () {
-					this.louis.should.be.type('object');
+					this.ella.should.be.type('object');
 				});
 
 				it('has methods that are common to all person objects', function () {
-					this.louis.sayName.should.be.type('function');
+					this.ella.sayName.should.be.type('function');
 
-					this.louis.sayName()
-						.should.eql('My name is Louis Armstrong');
+					this.ella.sayName()
+						.should.eql('My name is Ella Fitzgerald');
 				});
 
 				it('should have some methods overwritten', function () {
-					var louisIntro = this.louis.introduceSelf();
+					var ellaIntro = this.ella.introduceSelf();
 
-					louisIntro.should.eql('♪ My name is Louis Armstrong ♪');
+					ellaIntro.should.eql('♪ My name is Ella Fitzgerald ♪');
 
 					this.joe
 						.introduceSelf()
-							.should.not.eql(louisIntro);
+							.should.not.eql(ellaIntro);
 
 				});
 
 				it('has methods specific to musicians', function () {
-					this.louis.play.should.be.type('function');
-					this.louis
+					this.ella.play.should.be.type('function');
+					this.ella
 						.play('voice')
-							.should.eql(this.musicianMethods.play.call(this.louis, 'voice'));
+							.should.eql(this.musicianMethods.play.call(this.ella, 'voice'));
 				});
 
-				it('frank should be different from louis', function () {
-					this.louis.sayName().should.eql('My name is Louis Armstrong');
+				it('frank should be different from ella', function () {
+					this.ella.sayName().should.eql('My name is Ella Fitzgerald');
 					this.frank.sayName().should.eql('My name is Frank Sinatra');
 				})
 			});
+
+			describe('louis = new musician(...), billie = new musician(...) - constructor invocation', function () {
+				beforeEach(function () {
+					this.louis = new this.musician({ name: 'Louis Armstrong' });
+					this.billie = new this.musician({ name: 'Billie Holiday' });
+				})
+
+				it('louis should be different from billie', function () {
+					this.louis.sayName().should.eql('My name is Louis Armstrong');
+					this.billie.sayName().should.eql('My name is Billie Holiday');
+				})
+			})
 
 			describe('fred = person.extend(this.lawyerMethods)(* Fred data *)', function () {
 				beforeEach(function () {
@@ -191,8 +224,8 @@
 					var person = this.person;
 
 					this.lawyerMethods = {
-						initialize: function (data) {
-							person.base.initialize.apply(this, arguments);
+						constructor: function (data) {
+							person.prototype.constructor.apply(this, arguments);
 						},
 
 						introduceSelf: function () {
@@ -228,5 +261,6 @@
 		});
 
 	});
+
 
 });
