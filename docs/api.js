@@ -1,7 +1,7 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
-        "__base",
+        "__prototype",
         "__subject"
     ],
     "modules": [

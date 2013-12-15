@@ -41,7 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/__base.html">__base</a></li>
+                <li><a href="../classes/__prototype.html">__prototype</a></li>
             
                 <li><a href="../classes/__subject.html">__subject</a></li>
             
@@ -107,112 +107,148 @@ if (typeof define !== &#x27;function&#x27;) { var define = require(&#x27;amdefin
 define([&#x27;lodash&#x27;], function (_) {
 	&#x27;use strict&#x27;;
 
+	function argumentsToArray(args) {
+		return Array.prototype.slice.call(args);
+	}
+
 	/**
-	 * The original base object.
-	 * 
-	 * @class __base
+	 * The original prototype object.
+	 *
+	 * @class __prototype
 	 * @static
 	 */
-	var __base = {
+	var __prototype = {
 		/**
 		 * This method will be called before returning
 		 * the instance. Put your initialization code here.
-		 * 
+		 *
 		 * @method initialize
 		 */
 		initialize: function () {},
-
-		/**
-		 * Takes any number of objects as arguments
-		 * and extend the values to this one.
-		 * Overwrite this property to have new behaviour
-		 * on the next extension.
-		 * 
-		 * @method extend
-		 */
-		extend: function () {
-			var args = Array.prototype.slice.call(arguments);
-			args.unshift(this);
-			_.extend.apply(_, args);
-
-			return this;
-		}
 	};
 
 	/**
-	 * Returns an instance of the __base object.
-	 * 
+	 * Returns an instance of the __prototype object.
+	 *
 	 * This function is a simplified equivalent of
 	 * the one returned by &#x60;__subject.define&#x60;.
 	 * The only difference is that initialize method is not invoked.
-	 * 
+	 *
 	 * @class __subject
-	 * @constructor
+	 * @initialize
 	 */
 	var __subject = function subject() {
-		return Object.create(__base);
+		return Object.create(__prototype);
 	};
 
 	/**
-	 * The base object.
+	 * The prototype object.
 	 * When the __subject function is run, it will
-	 * create an instance of &#x60;this.base&#x60; and call its
+	 * create an instance of &#x60;this.prototype&#x60; and call its
 	 * initialize method.
-	 * 
-	 * @property base
+	 *
+	 * @property prototype
 	 * @type object
 	 */
-	__subject.base = __base;
+	__subject.prototype = __prototype;
 
 
 	/**
+	 *
+	 *
+	 * @method inherit
+	 */
+	__subject.inherit = function inherit(protoProps) {
+		_.assign(this.prototype, protoProps);
+		return this;
+	};
+
+	/**
 	 * Define a function that when run will return an instance
-	 * of its base object.
-	 * 
+	 * of its prototype object.
+	 *
 	 * All arguments passed to the extend method
-	 * will be passed on to &#x60;this.base.extend&#x60; method.
-	 * 
+	 * will be passed on to &#x60;this.prototype.extend&#x60; method.
+	 *
 	 * @method extend
 	 */
-	__subject.extend = function extend() {
+	__subject.extend = function extend(protoProps, staticProps) {
 
-		// [1] Create an instance of &#x27;this.base&#x27;
-		var newbase = Object.create(this.base);
+		// parent
+		var parent = this;
 
-		// [2] Call &#x27;newbase.extend&#x27; passing it all the arguments
-		//     with which extend was called.
-		//     The &#x27;extend&#x27; method is extend
-		newbase.extend.apply(newbase, arguments);
+		// [1] Declare the child variable.
+		var child;
 
-		// [3] Create a builder function 
-		//     that creates an instance of the base object
+		// [2] Define the child constructor/builder function
+		//     that creates an instance of the prototype object
 		//     and initializes it.
-		var builder = function builder() {
-			var instance = Object.create(newbase);
+		child = function builder() {
+			var instance = Object.create(child.prototype);
 			instance.initialize.apply(instance, arguments);
 
 			return instance;
 		};
 
-		// [4] Set the builder function&#x27;s base property
-		//     to reference the &#x60;newbase&#x60;, so that the new base may be 
+		// [3] Static methods
+		_.assign(child, parent, staticProps);
+
+		// [4] Set the child function&#x27;s prototype property
+		//     to reference the &#x60;nproto&#x60;, so that the new prototype may be
 		//     further extended.
-		builder.base = newbase;
+		child.prototype = Object.create(this.prototype);
+		child.prototype.constructor = child;
 
-		// [5] Define an extend
-		builder.extend = this.extend;
+		// [5] inherit protoProps.
+		child.inherit(protoProps);
 
-		// some aliases
-		builder.define = builder.extend;
-
-		return builder;
+		return child;
 	};
-
-	// aliases
-	__subject.define = __subject.extend;
 
 	return __subject;
 });
+
+/*
+
+
+  // Helper function to correctly set up the prototype chain, for subclasses.
+  // Similar to &#x60;goog.inherits&#x60;, but uses a hash of prototype properties and
+  // class properties to be extended.
+  var extend = function(protoProps, staticProps) {
+    var parent = this;
+    var child;
+
+    // The constructor function for the new subclass is either defined by you
+    // (the &quot;constructor&quot; property in your &#x60;extend&#x60; definition), or defaulted
+    // by us to simply call the parent&#x27;s constructor.
+    if (protoProps &amp;&amp; _.has(protoProps, &#x27;constructor&#x27;)) {
+      child = protoProps.constructor;
+    } else {
+      child = function(){ return parent.apply(this, arguments); };
+    }
+
+    // Add static properties to the constructor function, if supplied.
+    _.extend(child, parent, staticProps);
+
+    // Set the prototype chain to inherit from &#x60;parent&#x60;, without calling
+    // &#x60;parent&#x60;&#x27;s constructor function.
+    var Surrogate = function(){ this.constructor = child; };
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate;
+
+    // Add prototype properties (instance properties) to the subclass,
+    // if supplied.
+    if (protoProps) _.extend(child.prototype, protoProps);
+
+    // Set a convenience property in case the parent&#x27;s prototype is needed
+    // later.
+    child.__super__ = parent.prototype;
+
+    return child;
+  };
+
+*/
+
     </pre>
 </div>
 
