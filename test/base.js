@@ -21,11 +21,11 @@
 
 
 
-	describe('person = subject.extend({ *methods for person objects* })', function () {
+	describe('person = subject({ *methods for person objects* })', function () {
 
 		beforeEach(function () {
 			this.personMethods = {
-				constructor: function (data) {
+				initialize: function (data) {
 					this.name = data.name;
 				},
 
@@ -38,7 +38,7 @@
 				},
 			};
 
-			this.person = subject.extend(this.personMethods);
+			this.person = subject(this.personMethods);
 		})
 
 		describe('person', function () {
@@ -84,7 +84,7 @@
 				})
 			});
 
-			describe('sara = new person({name: "Sara"}) - constructor invocation', function () {
+			describe('sara = new person({name: "Sara"}) - initialize invocation', function () {
 				beforeEach(function () {
 					this.sara = new this.person({
 						name: 'Sara',
@@ -114,10 +114,10 @@
 				var person = this.person;
 
 				this.musicianMethods = {
-					// overwrite constructor
-					constructor: function (data) {
+					// overwrite initialize
+					initialize: function (data) {
 						// run person constructortion
-						person.prototype.constructor.call(this, data);
+						person.prototype.initialize.call(this, data);
 
 						// some further definitions
 						this.style = data.style;
@@ -206,7 +206,7 @@
 				})
 			});
 
-			describe('louis = new musician(...), billie = new musician(...) - constructor invocation', function () {
+			describe('louis = new musician(...), billie = new musician(...) - initialize invocation', function () {
 				beforeEach(function () {
 					this.louis = new this.musician({ name: 'Louis Armstrong' });
 					this.billie = new this.musician({ name: 'Billie Holiday' });
@@ -224,8 +224,8 @@
 					var person = this.person;
 
 					this.lawyerMethods = {
-						constructor: function (data) {
-							person.prototype.constructor.apply(this, arguments);
+						initialize: function (data) {
+							person.prototype.initialize.apply(this, arguments);
 						},
 
 						introduceSelf: function () {
@@ -261,6 +261,38 @@
 		});
 
 	});
+/*
 
+	describe('Person = subject.extend(PersonConstructor, personMethods)', function () {
+
+		beforeEach(function () {
+			this.PersonConstructor = function Person (data) {
+				this.name = data.name;
+
+				this.initialize.call(this, data);
+			};
+
+			this.personMethods = {
+				initialize: function (data) {
+					this.familyName = data.name.split(' ')[1];
+				},
+
+				sayName: function () {
+					return 'My name is ' + this.name;
+				}
+			};
+
+			this.Person = subject.extend(this.PersonConstructor, this.personMethods);
+
+		});
+
+		it('can be invoked as a constructor', function () {
+			var ana = new this.Person({ name: 'Ana Silva' });
+
+			ana.name.should.eql('Ana Silva');
+			ana.familyName.should.eql('Silva');
+		})
+	})
+*/
 
 });

@@ -41,7 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/__base.html">__base</a></li>
+                <li><a href="../classes/__prototype.html">__prototype</a></li>
             
                 <li><a href="../classes/__subject.html">__subject</a></li>
             
@@ -94,7 +94,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/src_subject.js.html#l50"><code>src&#x2F;subject.js:50</code></a>
+            Defined in: <a href="../files/src_subject.js.html#l38"><code>src&#x2F;subject.js:38</code></a>
         </div>
     
 
@@ -110,70 +110,13 @@
 
 
 <div class="box intro">
-    <p>Returns an instance of the __base object.</p>
+    <p>Returns an instance of the __prototype object.</p>
 <p>This function is a simplified equivalent of
 the one returned by <code>__subject.define</code>.
 The only difference is that initialize method is not invoked.</p>
 
 </div>
 
-
-    <div class="constructor">
-        <h2>Constructor</h2>
-        <div id="method___subject" class="method item">
-    <h3 class="name"><code>__subject</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/src_subject.js.html#l50"><code>src&#x2F;subject.js:50</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -207,6 +150,13 @@ The only difference is that initialize method is not invoked.</p>
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_inherit">inherit</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -218,7 +168,7 @@ The only difference is that initialize method is not invoked.</p>
                     <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_base">base</a>
+                                <a href="#property_prototype">prototype</a>
 
                                 
                                 
@@ -270,7 +220,7 @@ The only difference is that initialize method is not invoked.</p>
             
         
         
-        <a href="../files/src_subject.js.html#l76"><code>src&#x2F;subject.js:76</code></a>
+        <a href="../files/src_subject.js.html#l74"><code>src&#x2F;subject.js:74</code></a>
         
         </p>
 
@@ -282,9 +232,9 @@ The only difference is that initialize method is not invoked.</p>
 
     <div class="description">
         <p>Define a function that when run will return an instance
-of its base object.</p>
+of its prototype object.</p>
 <p>All arguments passed to the extend method
-will be passed on to <code>this.base.extend</code> method.</p>
+will be passed on to <code>this.prototype.extend</code> method.</p>
 
     </div>
 
@@ -296,17 +246,18 @@ will be passed on to <code>this.base.extend</code> method.</p>
 </div>
 
                 
-            </div>
-        
+                    <div id="method_inherit" class="method item">
+    <h3 class="name"><code>inherit</code></h3>
 
-        
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
+    
+        <span class="paren">()</span>
+    
 
-                
-                    <div id="property_base" class="property item">
-    <h3 class="name"><code>base</code></h3>
-    <span class="type">Object</span>
+    
+
+    
+
+    
 
     
 
@@ -331,15 +282,68 @@ will be passed on to <code>this.base.extend</code> method.</p>
         
         </p>
 
+
         
 
         
     </div>
 
     <div class="description">
-        <p>The base object.
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_prototype" class="property item">
+    <h3 class="name"><code>prototype</code></h3>
+    <span class="type">Object</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/src_subject.js.html#l52"><code>src&#x2F;subject.js:52</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The prototype object.
 When the __subject function is run, it will
-create an instance of <code>this.base</code> and call its
+create an instance of <code>this.prototype</code> and call its
 initialize method.</p>
 
     </div>
