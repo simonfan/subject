@@ -261,38 +261,39 @@
 		});
 
 	});
-/*
 
-	describe('Person = subject.extend(PersonConstructor, personMethods)', function () {
+	describe('person = subject.extend(initialize {Function}, perotoProps {Object})', function () {
 
 		beforeEach(function () {
-			this.PersonConstructor = function Person (data) {
+			this.personInitialize = function person (data) {
 				this.name = data.name;
 
-				this.initialize.call(this, data);
+				this.familyName = data.name.split(' ')[1];
 			};
 
 			this.personMethods = {
-				initialize: function (data) {
-					this.familyName = data.name.split(' ')[1];
-				},
-
 				sayName: function () {
 					return 'My name is ' + this.name;
 				}
 			};
 
-			this.Person = subject.extend(this.PersonConstructor, this.personMethods);
+			this.person = subject(this.personInitialize, this.personMethods);
 
 		});
 
 		it('can be invoked as a constructor', function () {
-			var ana = new this.Person({ name: 'Ana Silva' });
+			var ana = new this.person({ name: 'Ana Silva' });
 
 			ana.name.should.eql('Ana Silva');
 			ana.familyName.should.eql('Silva');
+		});
+
+		it('can be invoked as a builder', function () {
+			var joao = this.person({ name: 'Joao Franco' });
+
+			joao.name.should.eql('Joao Franco');
+			joao.familyName.should.eql('Franco');
 		})
-	})
-*/
+	});
 
 });

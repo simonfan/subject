@@ -1,7 +1,7 @@
 {
   "name": "subject",
   "main": "./src/subject",
-  "version": "0.2.2",
+  "version": "0.3.2",
   "description": "Builder-function based object inheritance chain.",
   "repository": {
     "type": "git",

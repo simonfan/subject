@@ -1,8 +1,8 @@
 {
   "name": "subject",
   "main": "src/subject.js",
-  "version": "0.2.2",
-  "description": "Builder-function based object inheritance chain",
+  "version": "0.3.2",
+  "description": "Builder-function based object inheritance chain.",
   "dependencies": {
     "lodash": "~2.4.1"
   },

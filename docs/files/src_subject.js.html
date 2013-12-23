@@ -128,18 +128,10 @@ define([&#x27;lodash&#x27;], function (_) {
 	};
 
 	/**
-	 * Returns an instance of the __prototype object.
-	 *
-	 * This function is a simplified equivalent of
-	 * the one returned by &#x60;__subject.define&#x60;.
-	 * The only difference is that initialize method is not invoked.
-	 *
+	 * Mock
 	 * @class __subject
-	 * @initialize
 	 */
-	var __subject = function subject() {
-		return Object.create(__prototype);
-	};
+	var __subject = function () {};
 
 	/**
 	 * The prototype object.
@@ -154,12 +146,18 @@ define([&#x27;lodash&#x27;], function (_) {
 
 
 	/**
+	 * Augments the prototype.
 	 *
-	 *
-	 * @method inherit
+	 * @method proto
 	 */
-	__subject.inherit = function inherit(protoProps) {
-		_.assign(this.prototype, protoProps);
+	__subject.proto = function proto(first, second) {
+
+		if (_.isObject(first)) {
+			_.assign(this.prototype, first);
+		} else {
+			this.prototype[first] = second;
+		}
+
 		return this;
 	};
 
@@ -196,58 +194,20 @@ define([&#x27;lodash&#x27;], function (_) {
 		// [4] Set the child function&#x27;s prototype property
 		//     to reference the &#x60;nproto&#x60;, so that the new prototype may be
 		//     further extended.
-		child.prototype = Object.create(this.prototype);
+		child.prototype = Object.create(parent.prototype);
 		child.prototype.constructor = child;
 
-		// [5] inherit protoProps.
-		child.inherit(protoProps);
+		// [5] proto protoProps.
+		child.proto(protoProps);
+
+		// [6] reference to parent&#x27;s prototype.
+		child.__super__ = parent.prototype;
 
 		return child;
 	};
 
-	return __subject;
+	return __subject.extend.bind(__subject);
 });
-
-/*
-
-
-  // Helper function to correctly set up the prototype chain, for subclasses.
-  // Similar to &#x60;goog.inherits&#x60;, but uses a hash of prototype properties and
-  // class properties to be extended.
-  var extend = function(protoProps, staticProps) {
-    var parent = this;
-    var child;
-
-    // The constructor function for the new subclass is either defined by you
-    // (the &quot;constructor&quot; property in your &#x60;extend&#x60; definition), or defaulted
-    // by us to simply call the parent&#x27;s constructor.
-    if (protoProps &amp;&amp; _.has(protoProps, &#x27;constructor&#x27;)) {
-      child = protoProps.constructor;
-    } else {
-      child = function(){ return parent.apply(this, arguments); };
-    }
-
-    // Add static properties to the constructor function, if supplied.
-    _.extend(child, parent, staticProps);
-
-    // Set the prototype chain to inherit from &#x60;parent&#x60;, without calling
-    // &#x60;parent&#x60;&#x27;s constructor function.
-    var Surrogate = function(){ this.constructor = child; };
-    Surrogate.prototype = parent.prototype;
-    child.prototype = new Surrogate;
-
-    // Add prototype properties (instance properties) to the subclass,
-    // if supplied.
-    if (protoProps) _.extend(child.prototype, protoProps);
-
-    // Set a convenience property in case the parent&#x27;s prototype is needed
-    // later.
-    child.__super__ = parent.prototype;
-
-    return child;
-  };
-
-*/
 
     </pre>
 </div>

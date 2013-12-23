@@ -61,8 +61,7 @@
             "namespace": "",
             "file": "src/subject.js",
             "line": 38,
-            "description": "Returns an instance of the __prototype object.\n\nThis function is a simplified equivalent of\nthe one returned by `__subject.define`.\nThe only difference is that initialize method is not invoked.",
-            "initialize": ""
+            "description": "Mock"
         }
     },
     "classitems": [
@@ -77,7 +76,7 @@
         },
         {
             "file": "src/subject.js",
-            "line": 52,
+            "line": 44,
             "description": "The prototype object.\nWhen the __subject function is run, it will\ncreate an instance of `this.prototype` and call its\ninitialize method.",
             "itemtype": "property",
             "name": "prototype",
@@ -87,15 +86,16 @@
         },
         {
             "file": "src/subject.js",
-            "line": 64,
+            "line": 56,
+            "description": "Augments the prototype.",
             "itemtype": "method",
-            "name": "inherit",
+            "name": "proto",
             "class": "__subject",
             "module": "subject"
         },
         {
             "file": "src/subject.js",
-            "line": 74,
+            "line": 72,
             "description": "Define a function that when run will return an instance\nof its prototype object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.prototype.extend` method.",
             "itemtype": "method",
             "name": "extend",
@@ -103,10 +103,5 @@
             "module": "subject"
         }
     ],
-    "warnings": [
-        {
-            "message": "unknown tag: initialize",
-            "line": " src/subject.js:38"
-        }
-    ]
+    "warnings": []
 }

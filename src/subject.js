@@ -77,8 +77,33 @@ define(['lodash'], function (_) {
 	 * will be passed on to `this.prototype.extend` method.
 	 *
 	 * @method extend
+	 * @param [initialize] {Function}
+	 * @param protoProps {Object}
+	 * @param staticProps {Object}
 	 */
-	__subject.extend = function extend(protoProps, staticProps) {
+	__subject.extend = function extend(first, second, third) {
+
+		var protoProps, staticProps;
+
+		// [0] parse out the arguments
+		if (_.isFunction(first)) {
+
+			// the first argument should be used as 'initialize'
+
+			// take care not to overwrite initialize from
+			// other objects, as we might be dealing with prototypes here!
+			protoProps = _.assign({}, second, {
+				initialize: first
+			});
+
+			staticProps = third;
+
+		} else if (_.isObject(first)) {
+
+			// normal
+			protoProps = first || {};
+			staticProps = third;
+		}
 
 		// parent
 		var parent = this;
