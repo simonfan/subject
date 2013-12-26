@@ -70,6 +70,14 @@ define(['lodash'], function (_) {
 	};
 
 	/**
+	 * This method will be invoked whenever the 'extend'
+	 * method is called.
+	 *
+	 * @method onExtend
+	 */
+	__subject.onExtend = function onExtend(child) { /* no-op */ };
+
+	/**
 	 * Define a function that when run will return an instance
 	 * of its prototype object.
 	 *
@@ -135,6 +143,11 @@ define(['lodash'], function (_) {
 
 		// [6] reference to parent's prototype.
 		child.__super__ = parent.prototype;
+
+		// [7] call `onExtend` method,
+		//     within the parent's context and passing
+		//	   `child` as first argument
+		this.onExtend(child);
 
 		return child;
 	};
