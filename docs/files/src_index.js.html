@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>src/subject.js - subject</title>
+    <title>src/index.js - subject</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -86,7 +86,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: src/subject.js</h1>
+                        <h1 class="file-heading">File: src/index.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
@@ -169,8 +169,33 @@ define([&#x27;lodash&#x27;], function (_) {
 	 * will be passed on to &#x60;this.prototype.extend&#x60; method.
 	 *
 	 * @method extend
+	 * @param [initialize] {Function}
+	 * @param protoProps {Object}
+	 * @param staticProps {Object}
 	 */
-	__subject.extend = function extend(protoProps, staticProps) {
+	__subject.extend = function extend(first, second, third) {
+
+		var protoProps, staticProps;
+
+		// [0] parse out the arguments
+		if (_.isFunction(first)) {
+
+			// the first argument should be used as &#x27;initialize&#x27;
+
+			// take care not to overwrite initialize from
+			// other objects, as we might be dealing with prototypes here!
+			protoProps = _.assign({}, second, {
+				initialize: first
+			});
+
+			staticProps = third;
+
+		} else if (_.isObject(first)) {
+
+			// normal
+			protoProps = first || {};
+			staticProps = third;
+		}
 
 		// parent
 		var parent = this;

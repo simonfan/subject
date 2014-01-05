@@ -1,15 +1,15 @@
 {
   "name": "subject",
-  "main": "./src/subject",
-  "version": "0.3.2",
+  "main": "./src",
+  "version": "0.3.3",
   "description": "Builder-function based object inheritance chain.",
   "repository": {
     "type": "git",
     "url": "https://github.com/simonfan/subject.git"
   },
   "dependencies": {
-    "lodash": "~2.4.1",
-    "amdefine": "~0.1.0"
+    "amdefine": ">=0.1.0",
+    "lodash": "~2.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",

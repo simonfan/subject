@@ -24,6 +24,9 @@ module.exports = function (grunt) {
 		bower: {
 			target: {
 				rjsConfig: 'amdconfig.js',
+				options: {
+					baseUrl: './src'
+				}
 			}
 		},
 
@@ -71,13 +74,13 @@ module.exports = function (grunt) {
 
 			// src
 			src: {
-				src: ['src/subject.js']
+				src: ['src/**/*.js']
 			}
 		},
 
 		watch: {
 			live: {
-				files: ['amdconfig.js', 'src/*.js', 'test/**', 'demo/**', 'docs/**', 'Gruntfile.js'],
+				files: ['amdconfig.js', 'src/**/*.js', 'test/**', 'demo/**', 'docs/**', 'Gruntfile.js'],
 				options: {
 					livereload: true
 				},
@@ -98,7 +101,7 @@ module.exports = function (grunt) {
 					// base url where to look for module files
 					// and relative to which the module paths will be defined
 					// (must coincide with that defined in mainConfigFile)
-					baseUrl: './',
+					baseUrl: './src',
 					// module name
 					name: 'subject',
 					// output here
@@ -111,25 +114,16 @@ module.exports = function (grunt) {
 
 					// exclude these modules AND their dependencies
 					// (excluding your bower dependencies)
-					exclude: ['underscore.contains', 'document-matcher', 'underscore'],
+					exclude: ["lodash"],
 
 					// excludeShallow
 					excludeShallow: [],
 
 					optimize: 'uglify2',
-				}
-			},
 
-			project: {
-				options: {
-					// source files
-					appDir: 'src/',
-					// output here:
-					dir: 'built/project/',
-					mainConfigFile: 'amdconfig.js',
-
-					// do not copy these files
-					fileExclusionRegExp: /^\./,
+					pragmas: {
+						exclude: true,
+					},
 				}
 			}
 		}

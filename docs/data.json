@@ -4,8 +4,8 @@
         "version": "0.0.0"
     },
     "files": {
-        "src/subject.js": {
-            "name": "src/subject.js",
+        "src/index.js": {
+            "name": "src/index.js",
             "modules": {
                 "subject": 1
             },
@@ -28,7 +28,7 @@
             "fors": {},
             "namespaces": {},
             "tag": "module",
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 38,
             "description": "Expressive prototypal inheritance."
         }
@@ -44,7 +44,7 @@
             "extension_for": [],
             "module": "subject",
             "namespace": "",
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 22,
             "description": "The original prototype object.",
             "static": 1
@@ -59,14 +59,14 @@
             "extension_for": [],
             "module": "subject",
             "namespace": "",
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 38,
             "description": "Mock"
         }
     },
     "classitems": [
         {
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 29,
             "description": "This method will be called before returning\nthe instance. Put your initialization code here.",
             "itemtype": "method",
@@ -75,7 +75,7 @@
             "module": "subject"
         },
         {
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 44,
             "description": "The prototype object.\nWhen the __subject function is run, it will\ncreate an instance of `this.prototype` and call its\ninitialize method.",
             "itemtype": "property",
@@ -85,7 +85,7 @@
             "module": "subject"
         },
         {
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 56,
             "description": "Augments the prototype.",
             "itemtype": "method",
@@ -94,11 +94,29 @@
             "module": "subject"
         },
         {
-            "file": "src/subject.js",
+            "file": "src/index.js",
             "line": 72,
             "description": "Define a function that when run will return an instance\nof its prototype object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.prototype.extend` method.",
             "itemtype": "method",
             "name": "extend",
+            "params": [
+                {
+                    "name": "initialize",
+                    "description": "",
+                    "type": "Function",
+                    "optional": true
+                },
+                {
+                    "name": "protoProps",
+                    "description": "",
+                    "type": "Object"
+                },
+                {
+                    "name": "staticProps",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
             "class": "__subject",
             "module": "subject"
         }
