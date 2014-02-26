@@ -96,6 +96,28 @@
         {
             "file": "src/index.js",
             "line": 72,
+            "description": "Merges a property into the prototype object\ninstead of overwriting it.",
+            "itemtype": "method",
+            "name": "protoMerge",
+            "params": [
+                {
+                    "name": "prop",
+                    "description": "",
+                    "type": "String|Object"
+                },
+                {
+                    "name": "merge",
+                    "description": "",
+                    "type": "Object",
+                    "optional": true
+                }
+            ],
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 104,
             "description": "Define a function that when run will return an instance\nof its prototype object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.prototype.extend` method.",
             "itemtype": "method",
             "name": "extend",

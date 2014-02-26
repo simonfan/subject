@@ -70,6 +70,38 @@ define(['lodash'], function (_) {
 	};
 
 	/**
+	 * Merges a property into the prototype object
+	 * instead of overwriting it.
+	 *
+	 * @method protoMerge
+	 * @param prop {String|Object}
+	 * @param [merge] {Object}
+	 */
+	__subject.protoMerge = function protoMerge(prop, merge) {
+
+		if (_.isString(prop)) {
+			// merge single property
+
+				// retrieve the original object.
+			var original = this.prototype[prop],
+				// create a "protocopy" of the original
+				obj = _.assign({}, original, merge);
+
+			this.proto(prop, obj);
+
+		} else {
+			// merge multiple properties
+
+			_.each(prop, _.bind(function (merge, prop) {
+
+				this.protoMerge(prop, merge);
+
+			}, this));
+		}
+	};
+
+
+	/**
 	 * Define a function that when run will return an instance
 	 * of its prototype object.
 	 *
