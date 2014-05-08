@@ -20,21 +20,57 @@
 	'use strict';
 
 	describe('subject enumerability', function () {
-		it('is fine (:', function () {
+		it('plain subject should be absolutely clean', function () {
 
-			var createObj = subject({});
+			var createObj = subject();
 
 			var obj = createObj();
 
 
-			// keys should be none
+			// keys should be empty
 			var keys = [];
 
 			for (var prop in obj) {
 				keys.push(prop);
 			}
 
-			keys.should.eql([]);
+			keys.length.should.eql(0);
 		});
+
+		it('extend should accept descriptor as second argument', function () {
+
+
+			// person methods are non enumerable
+			var person = subject({
+				initialize: function initialize(data) {
+					this.name = data.firstName + ' ' + data.lastName;
+
+					this.firstName = data.firstName;
+					this.lastName = data.lastName;
+				},
+
+				talk: function talk(data) {
+					return 'My name is ' + this.firstName;
+				},
+
+				name: void(0)
+
+			}, { enumerable: false });
+
+
+			// but the property 'name' is enumerable.
+			var john = person({
+				firstName: 'John',
+				lastName:  'Banana'
+			});
+
+			var jonhKeys = [];
+
+			for (var prop in john) {
+				jonhKeys.push(prop);
+			}
+
+			jonhKeys.should.eql(['name', 'firstName', 'lastName']);
+		})
 	});
 });

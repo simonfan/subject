@@ -104,11 +104,57 @@
 if (typeof define !== &#x27;function&#x27;) { var define = require(&#x27;amdefine&#x27;)(module) }
 /* jshint ignore:end */
 
-define([&#x27;lodash&#x27;], function (_) {
+define(function (require, exports, module) {
 	&#x27;use strict&#x27;;
 
-	function argumentsToArray(args) {
-		return Array.prototype.slice.call(args);
+
+	var _ = require(&#x27;lodash&#x27;);
+
+
+
+
+	var defaultDescriptor = {
+	//	value:
+		configurable: true,
+		writable:     true,
+		enumerable:   true,
+	};
+
+	/**
+	 *
+	 *
+	 * @method extend
+	 * @private
+	 * @param obj
+	 * @param extensions
+	 * @param [descriptor]
+	 */
+	function extend(obj, extensions, descriptor) {
+
+		if (!descriptor) {
+			// simple extending.
+
+			return _.extend(obj, extensions);
+
+		} else {
+			// use defineProperty to extend.
+
+			// set default values for descriptor
+			_.defaults(descriptor, defaultDescriptor);
+
+			_.each(extensions, function (value, property) {
+
+				// set value on descriptor
+				var desc = _.extend({ value: value }, descriptor);
+
+			//	console.log(&#x27;define &#x27; + property);
+
+				// run defineProperty
+				Object.defineProperty(obj, property, desc);
+			});
+
+			return obj;
+		}
 	}
 
 	/**
@@ -117,21 +163,25 @@ define([&#x27;lodash&#x27;], function (_) {
 	 * @class __prototype
 	 * @static
 	 */
-	var __prototype = {
+	var __prototype = {};
+
+	extend(__prototype, {
 		/**
 		 * This method will be called before returning
 		 * the instance. Put your initialization code here.
 		 *
 		 * @method initialize
 		 */
-		initialize: function () {},
-	};
+		initialize: function () {}
+	}, { enumerable: false });
 
 	/**
 	 * Mock
 	 * @class __subject
 	 */
 	var __subject = function () {};
+
+
 
 	/**
 	 * The prototype object.
@@ -145,123 +195,135 @@ define([&#x27;lodash&#x27;], function (_) {
 	__subject.prototype = __prototype;
 
 
-	/**
-	 * Augments the prototype.
-	 *
-	 * @method proto
-	 */
-	__subject.proto = function proto(first, second) {
 
-		if (_.isObject(first)) {
-			_.assign(this.prototype, first);
-		} else {
-			this.prototype[first] = second;
-		}
+	// static methods
+	extend(__subject, {
 
-		return this;
-	};
+		/**
+		 * Augments the prototype.
+		 *
+		 * @method proto
+		 */
+		proto: function proto() {
 
-	/**
-	 * Merges a property into the prototype object
-	 * instead of overwriting it.
-	 *
-	 * @method protoMerge
-	 * @param prop {String|Object}
-	 * @param [merge] {Object}
-	 */
-	__subject.protoMerge = function protoMerge(prop, merge) {
+			var extensions, descriptor;
 
-		if (_.isString(prop)) {
-			// merge single property
+			// [1] parse arguments
+			if (_.isObject(arguments[0])) {
 
-				// retrieve the original object.
-			var original = this.prototype[prop],
-				// create a &quot;protocopy&quot; of the original
-				obj = _.assign({}, original, merge);
+				// arguments = [extensions, descriptor];
+				extensions = arguments[0];
+				descriptor = arguments[1];
 
-			this.proto(prop, obj);
+			} else {
+				// arguments = [propertyName, propertyValue, descriptor];
 
-		} else {
-			// merge multiple properties
+				extensions = ({})[arguments[0]] = arguments[1];
+				descriptor = arguments[2];
+			}
 
-			_.each(prop, _.bind(function (merge, prop) {
+			// [2] run extending
+			extend(this.prototype, extensions, descriptor);
 
-				this.protoMerge(prop, merge);
+			return this;
+		},
 
-			}, this));
-		}
-	};
+		/**
+		 * Merges a property into the prototype object
+		 * instead of overwriting it.
+		 *
+		 * @method protoMerge
+		 * @param prop {String|Object}
+		 * @param [merge] {Object}
+		 */
+		protoMerge: function protoMerge() {
 
+			var original, merge, descriptor;
 
-	/**
-	 * Define a function that when run will return an instance
-	 * of its prototype object.
-	 *
-	 * All arguments passed to the extend method
-	 * will be passed on to &#x60;this.prototype.extend&#x60; method.
-	 *
-	 * @method extend
-	 * @param [initialize] {Function}
-	 * @param protoProps {Object}
-	 * @param staticProps {Object}
-	 */
-	__subject.extend = function extend(first, second, third) {
+			if (_.isString(arguments[0])) {
+				// merge single property
 
-		var protoProps, staticProps;
+				// property to be merged
+				var prop = arguments[0];
 
-		// [0] parse out the arguments
-		if (_.isFunction(first)) {
+				original   = this.prototype[prop];
+				merge      = arguments[1];
+				descriptor = arguments[2];
 
-			// the first argument should be used as &#x27;initialize&#x27;
+				// run extending
+				this.prototype[prop] = extend(_.create(original), merge, descriptor);
 
-			// take care not to overwrite initialize from
-			// other objects, as we might be dealing with prototypes here!
-			protoProps = _.assign({}, second, {
-				initialize: first
+			} else {
+				// merge multiple properties
+				descriptor = arguments[1];
+				_.each(arguments[0], _.bind(function (merge, prop) {
+
+					this.protoMerge(prop, merge, descriptor);
+
+				}, this));
+			}
+
+			return this;
+		},
+
+		/**
+		 * Define a function that when run will return an instance
+		 * of its prototype object.
+		 *
+		 * All arguments passed to the extend method
+		 * will be passed on to &#x60;this.prototype.extend&#x60; method.
+		 *
+		 * @method extend
+		 * @param extensions {Object}
+		 */
+		extend: function extendSubject(extensions, options) {
+
+			// parent
+			var parent = this;
+
+			// [1] Declare the child variable.
+			var child;
+
+			// [2] Define the child constructor/builder function
+			//     that creates an instance of the prototype object
+			//     and initializes it.
+			child = function builder() {
+				var instance = Object.create(child.prototype);
+				instance.initialize.apply(instance, arguments);
+
+				return instance;
+			};
+
+			// [3] Static methods
+			extend(child, _.pick(parent, [&#x27;proto&#x27;, &#x27;protoMerge&#x27;, &#x27;extend&#x27;]), {
+				enumerable: false,
 			});
 
-			staticProps = third;
+			// [4] Set the child function&#x27;s prototype property
+			//     to reference the &#x60;nproto&#x60;, so that the new prototype may be
+			//     further extended.
+			child.prototype = Object.create(parent.prototype);
+		//	child.prototype.constructor = child;
 
-		} else if (_.isObject(first)) {
+			// [5] proto extensions.
+			child.proto(extensions, options);
 
-			// normal
-			protoProps = first || {};
-			staticProps = third;
-		}
 
-		// parent
-		var parent = this;
 
-		// [1] Declare the child variable.
-		var child;
+			// define non-enumerable properties
+			extend(child, {
+				constructor: child,
+				__super__: parent.prototype,
 
-		// [2] Define the child constructor/builder function
-		//     that creates an instance of the prototype object
-		//     and initializes it.
-		child = function builder() {
-			var instance = Object.create(child.prototype);
-			instance.initialize.apply(instance, arguments);
+			}, { enumerable: false });
 
-			return instance;
-		};
+			// [6] reference to parent&#x27;s prototype.
+		//	child.__super__ = parent.prototype;
 
-		// [3] Static methods
-		_.assign(child, parent, staticProps);
+			return child;
+		},
 
-		// [4] Set the child function&#x27;s prototype property
-		//     to reference the &#x60;nproto&#x60;, so that the new prototype may be
-		//     further extended.
-		child.prototype = Object.create(parent.prototype);
-		child.prototype.constructor = child;
-
-		// [5] proto protoProps.
-		child.proto(protoProps);
-
-		// [6] reference to parent&#x27;s prototype.
-		child.__super__ = parent.prototype;
-
-		return child;
-	};
+	}, { enumerable: false });
 
 	return __subject.extend.bind(__subject);
 });
