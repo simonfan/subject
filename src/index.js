@@ -60,7 +60,7 @@ define(function (require, exports, module) {
 		 *
 		 *
 		 */
-		staticProperties: ['proto', 'protoMerge', 'staticProperties', 'assignStatic', 'extend'],
+		staticProperties: ['proto', 'assignProto', 'protoMerge', 'staticProperties', 'assignStatic', 'extend'],
 
 		/**
 		 * Assigns static values.
@@ -98,7 +98,7 @@ define(function (require, exports, module) {
 	 *
 	 */
 	var helpers = { assign: assign };
-	assign(exports, helpers, {
+	assign(module.exports, helpers, {
 		enumerable:   false,
 		writable:     false,
 		configurable: false
