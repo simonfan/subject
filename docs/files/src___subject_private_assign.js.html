@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>subject - subject</title>
+    <title>src/__subject/private/assign.js - subject</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,50 +84,67 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>subject Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__subject/private/assign.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/* jshint ignore:start */
+if (typeof define !== &#x27;function&#x27;) { var define = require(&#x27;amdefine&#x27;)(module) }
+/* jshint ignore:end */
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src_index.js.html#l25"><code>src&#x2F;index.js:25</code></a>
-        </div>
-    
-
-    
-</div>
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
 
+	var _ = require(&#x27;lodash&#x27;);
 
-<div class="box intro">
-    <p>Expressive (very :) prototypal inheritance.</p>
+	var defaultDescriptor = {
+	//	value:
+		configurable: true,
+		writable:     true,
+		enumerable:   true,
+	};
 
-</div>
+	/**
+	 *
+	 *
+	 * @method assign
+	 * @private
+	 * @param obj
+	 * @param extensions
+	 * @param [descriptor]
+	 */
+	module.exports = function assign(obj, extensions, descriptor) {
 
+		if (!descriptor) {
+			// simple assigning.
 
+			return _.assign(obj, extensions);
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+		} else {
+			// use defineProperty to assign.
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/__subject.html">
-                        __subject
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+			// set default values for descriptor
+			_.defaults(descriptor, defaultDescriptor);
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+			_.each(extensions, function (value, property) {
+
+				// set value on descriptor
+				var desc = _.assign({ value: value }, descriptor);
+
+			//	console.log(&#x27;define &#x27; + property);
+
+				// run defineProperty
+				Object.defineProperty(obj, property, desc);
+			});
+
+			return obj;
+		}
+	};
+
+});
+
+    </pre>
 </div>
 
                     </div>

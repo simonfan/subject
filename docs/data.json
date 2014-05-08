@@ -4,13 +4,40 @@
         "version": "0.0.0"
     },
     "files": {
+        "src/__subject/private/assign.js": {
+            "name": "src/__subject/private/assign.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__subject/public/assign-proto.js": {
+            "name": "src/__subject/public/assign-proto.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__subject/public/extend.js": {
+            "name": "src/__subject/public/extend.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/__subject/public/proto-merge.js": {
+            "name": "src/__subject/public/proto-merge.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
         "src/index.js": {
             "name": "src/index.js",
             "modules": {
                 "subject": 1
             },
             "classes": {
-                "__prototype": 1,
                 "__subject": 1
             },
             "fors": {},
@@ -22,33 +49,17 @@
             "name": "subject",
             "submodules": {},
             "classes": {
-                "__prototype": 1,
                 "__subject": 1
             },
             "fors": {},
             "namespaces": {},
             "tag": "module",
             "file": "src/index.js",
-            "line": 86,
-            "description": "Expressive prototypal inheritance."
+            "line": 25,
+            "description": "Expressive (very :) prototypal inheritance."
         }
     },
     "classes": {
-        "__prototype": {
-            "name": "__prototype",
-            "shortname": "__prototype",
-            "classitems": [],
-            "plugins": [],
-            "extensions": [],
-            "plugin_for": [],
-            "extension_for": [],
-            "module": "subject",
-            "namespace": "",
-            "file": "src/index.js",
-            "line": 68,
-            "description": "The original prototype object.",
-            "static": 1
-        },
         "__subject": {
             "name": "__subject",
             "shortname": "__subject",
@@ -60,16 +71,15 @@
             "module": "subject",
             "namespace": "",
             "file": "src/index.js",
-            "line": 86,
-            "description": "Mock"
+            "line": 25
         }
     },
     "classitems": [
         {
-            "file": "src/index.js",
-            "line": 31,
+            "file": "src/__subject/private/assign.js",
+            "line": 18,
             "itemtype": "method",
-            "name": "extend",
+            "name": "assign",
             "access": "private",
             "tagname": "",
             "params": [
@@ -87,40 +97,34 @@
                     "optional": true
                 }
             ],
-            "class": "__prototype",
-            "module": "subject"
+            "class": "__subject"
         },
         {
-            "file": "src/index.js",
-            "line": 77,
-            "description": "This method will be called before returning\nthe instance. Put your initialization code here.",
-            "itemtype": "method",
-            "name": "initialize",
-            "class": "__prototype",
-            "module": "subject"
-        },
-        {
-            "file": "src/index.js",
-            "line": 94,
-            "description": "The prototype object.\nWhen the __subject function is run, it will\ncreate an instance of `this.prototype` and call its\ninitialize method.",
-            "itemtype": "property",
-            "name": "prototype",
-            "type": "object",
-            "class": "__subject",
-            "module": "subject"
-        },
-        {
-            "file": "src/index.js",
-            "line": 110,
+            "file": "src/__subject/public/assign-proto.js",
+            "line": 13,
             "description": "Augments the prototype.",
             "itemtype": "method",
             "name": "proto",
-            "class": "__subject",
-            "module": "subject"
+            "class": "__subject"
         },
         {
-            "file": "src/index.js",
-            "line": 139,
+            "file": "src/__subject/public/extend.js",
+            "line": 15,
+            "description": "Define a function that when run will return an instance\nof its prototype object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.prototype.extend` method.",
+            "itemtype": "method",
+            "name": "extend",
+            "params": [
+                {
+                    "name": "extensions",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "__subject"
+        },
+        {
+            "file": "src/__subject/public/proto-merge.js",
+            "line": 12,
             "description": "Merges a property into the prototype object\ninstead of overwriting it.",
             "itemtype": "method",
             "name": "protoMerge",
@@ -137,25 +141,71 @@
                     "optional": true
                 }
             ],
+            "class": "__subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 30,
+            "description": "The prototype object.\nWhen the __subject function is run, it will\ncreate an instance of `this.prototype` and call its\ninitialize method.",
+            "itemtype": "property",
+            "name": "prototype",
+            "type": "object",
             "class": "__subject",
             "module": "subject"
         },
         {
             "file": "src/index.js",
-            "line": 177,
-            "description": "Define a function that when run will return an instance\nof its prototype object.\n\nAll arguments passed to the extend method\nwill be passed on to `this.prototype.extend` method.",
+            "line": 40,
+            "description": "This method will be called before returning\nthe instance. Put your initialization code here.",
             "itemtype": "method",
-            "name": "extend",
-            "params": [
-                {
-                    "name": "extensions",
-                    "description": "",
-                    "type": "Object"
-                }
-            ],
+            "name": "initialize",
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 58,
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 65,
+            "description": "Assigns static values.",
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 87,
+            "description": "Bind the extend method of the original __subject and export it.\n__subject is not accessible to anyone, only instances of it.",
+            "class": "__subject",
+            "module": "subject"
+        },
+        {
+            "file": "src/index.js",
+            "line": 94,
+            "description": "Assign helper functions directly to the exports,\nas the exports is not the extend method by itself,\nbut actually a bound version returned by _.bind",
             "class": "__subject",
             "module": "subject"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "Missing item type",
+            "line": " src/index.js:58"
+        },
+        {
+            "message": "Missing item type\nAssigns static values.",
+            "line": " src/index.js:65"
+        },
+        {
+            "message": "Missing item type\nBind the extend method of the original __subject and export it.\n__subject is not accessible to anyone, only instances of it.",
+            "line": " src/index.js:87"
+        },
+        {
+            "message": "Missing item type\nAssign helper functions directly to the exports,\nas the exports is not the extend method by itself,\nbut actually a bound version returned by _.bind",
+            "line": " src/index.js:94"
+        }
+    ]
 }

@@ -80,7 +80,7 @@ module.exports = function (grunt) {
 
 		watch: {
 			live: {
-				files: ['amdconfig.js', 'src/**/*.js', 'test/**', 'demo/**', 'docs/**', 'Gruntfile.js'],
+				files: ['amdconfig.js', 'src/**/**/*.js', 'test/**', 'demo/**', 'docs/**', 'Gruntfile.js'],
 				options: {
 					livereload: true
 				},

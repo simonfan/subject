@@ -1,7 +1,6 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
-        "__prototype",
         "__subject"
     ],
     "modules": [
@@ -11,7 +10,7 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "subject",
             "name": "subject",
-            "description": "Expressive prototypal inheritance."
+            "description": "Expressive (very :) prototypal inheritance."
         }
     ]
 } };

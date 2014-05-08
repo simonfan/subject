@@ -19,7 +19,7 @@
 		        mocha.setup('bdd');
 
 				// now that amdconfig is loaded, the base url is /src
-			    require(["/test/base.js","/test/enumerability.js","/test/proto-merge.js"], function() {
+			    require(["/test/base.js","/test/enumerability.js","/test/assign-static.js","/test/proto-merge.js"], function() {
 			        mocha.checkLeaks();
 			        mocha.run();
 			    })

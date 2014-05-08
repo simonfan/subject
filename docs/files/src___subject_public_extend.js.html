@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>subject - subject</title>
+    <title>src/__subject/public/extend.js - subject</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -84,50 +84,81 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>subject Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: src/__subject/public/extend.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/* jshint ignore:start */
+if (typeof define !== &#x27;function&#x27;) { var define = require(&#x27;amdefine&#x27;)(module) }
+/* jshint ignore:end */
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/src_index.js.html#l25"><code>src&#x2F;index.js:25</code></a>
-        </div>
-    
-
-    
-</div>
+define(function (require, exports, module) {
+	&#x27;use strict&#x27;;
 
 
+	var _ = require(&#x27;lodash&#x27;);
 
-<div class="box intro">
-    <p>Expressive (very :) prototypal inheritance.</p>
-
-</div>
-
+	// internal
+	var assign = require(&#x27;../private/assign&#x27;);
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	/**
+	 * Define a function that when run will return an instance
+	 * of its prototype object.
+	 *
+	 * All arguments passed to the extend method
+	 * will be passed on to &#x60;this.prototype.extend&#x60; method.
+	 *
+	 * @method extend
+	 * @param extensions {Object}
+	 */
+	module.exports = function extendSubject(extensions, descriptor) {
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/__subject.html">
-                        __subject
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+		// parent
+		var parent = this;
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+		// [1] Declare the child variable.
+		var child;
+
+		// [2] Define the child constructor/builder function
+		//     that creates an instance of the prototype object
+		//     and initializes it.
+		child = function builder() {
+			var instance = _.create(child.prototype);
+			instance.initialize.apply(instance, arguments);
+
+			return instance;
+		};
+
+		// [3] Static methods
+		assign(child, _.pick(parent, parent.staticProperties), {
+			enumerable: false,
+		});
+
+		// [4] Set the child function&#x27;s prototype property
+		//     to reference an object created from the parent&#x27;s prototype
+		child.prototype = _.create(parent.prototype);
+
+		// [5] proto extensions.
+		child.proto(extensions, descriptor);
+
+
+		// [6] references
+		assign(child, {
+			// to constructor of the itself
+			constructor: child,
+			// to parent&#x27;s prototype.
+			__super__: parent.prototype,
+
+		}, { enumerable: false });
+
+
+		return child;
+	};
+
+});
+
+    </pre>
 </div>
 
                     </div>
