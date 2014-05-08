@@ -15,6 +15,37 @@ if (typeof define !== 'function') { var define = require('amdefine')(module) }
 define(['lodash'], function (_) {
 	'use strict';
 
+
+
+
+
+	var defaultDescriptor = {
+	//	value:
+		configurable: false,
+		writable:     true,
+		enumerable:   false,
+	};
+
+	function extendNonEnumerable(obj, extensions, descriptor) {
+
+		// set default values for descriptor
+		descriptor = descriptor || {};
+		_.defaults(descriptor, defaultDescriptor);
+
+		_.each(extensions, function (value, key) {
+
+			var d = { value: value };
+			_.assign(d, descriptor);
+
+			Object.defineProperty(obj, key, d);
+
+		});
+
+		return obj;
+	}
+
+
+
 	function argumentsToArray(args) {
 		return Array.prototype.slice.call(args);
 	}
@@ -25,15 +56,17 @@ define(['lodash'], function (_) {
 	 * @class __prototype
 	 * @static
 	 */
-	var __prototype = {
+	var __prototype = {};
+
+	extendNonEnumerable(__prototype, {
 		/**
 		 * This method will be called before returning
 		 * the instance. Put your initialization code here.
 		 *
 		 * @method initialize
 		 */
-		initialize: function () {},
-	};
+		initialize: function () {}
+	});
 
 	/**
 	 * Mock
@@ -109,33 +142,9 @@ define(['lodash'], function (_) {
 	 * will be passed on to `this.prototype.extend` method.
 	 *
 	 * @method extend
-	 * @param [initialize] {Function}
-	 * @param protoProps {Object}
-	 * @param staticProps {Object}
+	 * @param extensions {Object}
 	 */
-	__subject.extend = function extend(first, second, third) {
-
-		var protoProps, staticProps;
-
-		// [0] parse out the arguments
-		if (_.isFunction(first)) {
-
-			// the first argument should be used as 'initialize'
-
-			// take care not to overwrite initialize from
-			// other objects, as we might be dealing with prototypes here!
-			protoProps = _.assign({}, second, {
-				initialize: first
-			});
-
-			staticProps = third;
-
-		} else if (_.isObject(first)) {
-
-			// normal
-			protoProps = first || {};
-			staticProps = third;
-		}
+	__subject.extend = function extend(extensions, options) {
 
 		// parent
 		var parent = this;
@@ -154,19 +163,27 @@ define(['lodash'], function (_) {
 		};
 
 		// [3] Static methods
-		_.assign(child, parent, staticProps);
+		_.assign(child, parent);
 
 		// [4] Set the child function's prototype property
 		//     to reference the `nproto`, so that the new prototype may be
 		//     further extended.
 		child.prototype = Object.create(parent.prototype);
-		child.prototype.constructor = child;
+	//	child.prototype.constructor = child;
 
-		// [5] proto protoProps.
-		child.proto(protoProps);
+		// [5] proto extensions.
+		child.proto(extensions);
+
+
+
+		// define non-enumerable properties
+		extendNonEnumerable(child, {
+			constructor: child,
+			__super__: parent.prototype
+		});
 
 		// [6] reference to parent's prototype.
-		child.__super__ = parent.prototype;
+	//	child.__super__ = parent.prototype;
 
 		return child;
 	};
