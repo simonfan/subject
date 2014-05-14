@@ -1,7 +1,7 @@
 {
   "name": "subject",
   "main": "built/subject.js",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Builder-function based object inheritance chain.",
   "dependencies": {
     "lodash": "~2.4.1"

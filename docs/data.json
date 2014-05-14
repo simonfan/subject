@@ -77,7 +77,65 @@
     "classitems": [
         {
             "file": "src/__subject/private/assign.js",
-            "line": 18,
+            "line": 23,
+            "description": "Defines properties using accessor descriptor",
+            "itemtype": "method",
+            "name": "assignAccessor",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "[description]",
+                    "type": "[type]"
+                },
+                {
+                    "name": "properties",
+                    "description": "[description]",
+                    "type": "[type]"
+                },
+                {
+                    "name": "descriptor",
+                    "description": "[description]",
+                    "type": "[type]"
+                }
+            ],
+            "return": {
+                "description": "[description]",
+                "type": "[type]"
+            },
+            "class": "__subject"
+        },
+        {
+            "file": "src/__subject/private/assign.js",
+            "line": 65,
+            "description": "Defines properties using data descriptors.",
+            "itemtype": "method",
+            "name": "assignData",
+            "params": [
+                {
+                    "name": "obj",
+                    "description": "[description]",
+                    "type": "[type]"
+                },
+                {
+                    "name": "data",
+                    "description": "[description]",
+                    "type": "[type]"
+                },
+                {
+                    "name": "descriptor",
+                    "description": "[description]",
+                    "type": "[type]"
+                }
+            ],
+            "return": {
+                "description": "[description]",
+                "type": "[type]"
+            },
+            "class": "__subject"
+        },
+        {
+            "file": "src/__subject/private/assign.js",
+            "line": 92,
             "itemtype": "method",
             "name": "assign",
             "access": "private",
@@ -88,7 +146,7 @@
                     "description": ""
                 },
                 {
-                    "name": "extensions",
+                    "name": "data",
                     "description": ""
                 },
                 {
