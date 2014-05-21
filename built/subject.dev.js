@@ -152,10 +152,11 @@ define('__subject/public/assign-proto',['require','exports','module','lodash','.
 			extensions = arguments[0];
 			descriptor = arguments[1];
 
-		} else {
+		} else if (_.isString(arguments[0])) {
 			// arguments = [propertyName, propertyValue, descriptor];
 
-			extensions = ({})[arguments[0]] = arguments[1];
+			extensions = {};
+			extensions[arguments[0]] = arguments[1];
 			descriptor = arguments[2];
 		}
 
