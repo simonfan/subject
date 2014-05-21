@@ -139,12 +139,13 @@ define(function (require, exports, module) {
 		//     to reference an object created from the parent&#x27;s prototype
 		child.prototype = _.create(parent.prototype);
 
-		// [5] proto extensions.
-		child.proto(extensions, descriptor);
+		// [5] assignProto extensions.
+		child.assignProto(extensions, descriptor);
 
 
-		// [6] references
-		assign(child, {
+		// [6] references to the constructor
+		//     and super  must be set onto the prototype
+		assign(child.prototype, {
 			// to constructor of the itself
 			constructor: child,
 			// to parent&#x27;s prototype.
