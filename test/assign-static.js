@@ -24,7 +24,25 @@
 			done();
 		});
 
-		it('is fine (:', function () {
+		it('assignStatic(propName, value, descriptor)', function () {
+			var person = subject({
+				prop1: 'val1',
+				prop2: 'val2'
+			});
+
+			person.assignStatic('static1', 'static1value');
+
+			person.static1.should.eql('static1value');
+
+			// define a constructor that extends person
+			var singer = person.extend({
+				prop2: 'singer-val2'
+			});
+
+			singer.static1.should.eql('static1value');
+		});
+
+		it('assignStatic({ prop: value }, descriptor)', function () {
 
 
 			// person methods are non enumerable

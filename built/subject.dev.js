@@ -356,9 +356,38 @@ define('subject',['require','exports','module','lodash','./__subject/private/ass
 		 * Assigns static values.
 		 *
 		 */
-		assignStatic: function assignStatic(properties, descriptor) {
+		assignStatic: function assignStatic() {
 
-			this.staticProperties = _.union(this.staticProperties, _.keys(properties));
+			// parse out the arguments :)
+				// properties to be set
+			var properties,
+				// array of propertynames
+				propertyNames,
+				// descriptor used for Object.defineProperty(name, value, descriptor)
+				descriptor;
+
+			if (_.isString(arguments[0])) {
+				// single property,
+				// expect second argument to be the property valu
+				// and third argument to be property descriptor
+				//
+				// arguments = [propertyName, propertyValue, propertyDescriptor]
+				properties = {};
+				properties[arguments[0]] = arguments[1];
+				propertyNames = [arguments[0]];
+
+				descriptor = arguments[2];
+
+			} else if (_.isObject(arguments[0])) {
+				// multiple properties
+				// arguments = [properties, propertyDescriptor]
+				properties = arguments[0];
+				propertyNames = _.keys(properties);
+
+				descriptor = arguments[1];
+			}
+
+			this.staticProperties = _.union(this.staticProperties, propertyNames);
 
 			return assign(this, properties, descriptor);
 		},

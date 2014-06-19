@@ -235,14 +235,14 @@
         },
         {
             "file": "src/index.js",
-            "line": 87,
+            "line": 116,
             "description": "Bind the extend method of the original __subject and export it.\n__subject is not accessible to anyone, only instances of it.",
             "class": "__subject",
             "module": "subject"
         },
         {
             "file": "src/index.js",
-            "line": 94,
+            "line": 123,
             "description": "Assign helper functions directly to the exports,\nas the exports is not the extend method by itself,\nbut actually a bound version returned by _.bind",
             "class": "__subject",
             "module": "subject"
@@ -259,11 +259,11 @@
         },
         {
             "message": "Missing item type\nBind the extend method of the original __subject and export it.\n__subject is not accessible to anyone, only instances of it.",
-            "line": " src/index.js:87"
+            "line": " src/index.js:116"
         },
         {
             "message": "Missing item type\nAssign helper functions directly to the exports,\nas the exports is not the extend method by itself,\nbut actually a bound version returned by _.bind",
-            "line": " src/index.js:94"
+            "line": " src/index.js:123"
         }
     ]
 }
