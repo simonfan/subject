@@ -23,6 +23,19 @@
     "mocha": "~1.15.0",
     "grunt-simple-mocha": "~0.4.0"
   },
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/6..latest",
+      "chrome/22..latest",
+      "firefox/16..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6",
+      "ipad/6",
+      "android-browser/latest"
+    ]
+  },
   "scripts": {
     "test": "mocha"
   }
