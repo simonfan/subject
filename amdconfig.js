@@ -11,7 +11,8 @@ require.config({
 		jquery: '../bower_components/jquery/jquery',
 		lodash: '../bower_components/lodash/dist/lodash.compat',
 		'requirejs-text': '../bower_components/requirejs-text/text',
-		underscore: '../bower_components/underscore/underscore'
+		underscore: '../bower_components/underscore/underscore',
+		backbone: '../bower_components/backbone/backbone'
 	},
 	shim: {
 		backbone: {

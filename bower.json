@@ -11,6 +11,7 @@
     "requirejs-text": "*",
     "underscore": "*",
     "jquery": "*",
-    "qunit": "*"
+    "qunit": "*",
+    "backbone": "~1.1.2"
   }
 }

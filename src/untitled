@@ -1,0 +1,80 @@
+
+var person = subject({
+	initialize: function (opts) {
+		this.name = opts.name
+	},
+
+	sayName: function () {
+		return 'hi ' + this.name;
+	}
+});
+
+
+
+
+var child = person.extend({
+
+
+
+	play: function () {
+		'my name is ' + this.name + ' and i am playing with grass';
+	},
+});
+
+
+
+
+var ana = person({
+	name: 'ANa'
+});
+
+ana.sayName();
+// ana.play()
+
+var anaCarol = child({
+	name: 'Ana Carol'
+});
+
+anaCarol.sayName();
+anaCarol.play();
+
+
+
+
+
+
+var person = {
+	sayName: function () {
+		return 'hi ' + this.name;
+	},
+};
+
+function createPerson(options) {
+	var p = Object.create(person);
+
+	p.name = options.name;
+
+	return p;
+}
+
+function createChild (options) {
+
+	var c = createPerson(options);
+	c.play = function play(argument) {
+		return 'playing ' + this.name;
+	};
+
+	return c;
+}
+
+var ana = createPerson({ name: 'Ana' });
+
+
+
+var anaCarol = createChild({ name: 'An carol'});
+
+var paulo = createChild({ name: 'Paulo'});
+
+var children = ['ana', 'pedro', 'joao'].forEach(function (cname) {
+	return createChild({ name: cname });
+})

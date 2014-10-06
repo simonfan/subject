@@ -252,12 +252,26 @@ define('__subject/public/extend',['require','exports','module','lodash','../priv
 		// [2] Define the child constructor/builder function
 		//     that creates an instance of the prototype object
 		//     and initializes it.
-		child = function builder() {
-			var instance = _.create(child.prototype);
-			instance.initialize.apply(instance, arguments);
+		if (_.isFunction(extensions)) {
 
-			return instance;
-		};
+			child = function builder() {
+
+				var instance = _.create(extensions.prototype);
+				_.assign(instance, child.prototype);
+
+				extensions.apply(instance, arguments);
+				return instance;
+			}
+
+		} else {
+
+			child = function builder() {
+				var instance = _.create(child.prototype);
+				instance.initialize.apply(instance, arguments);
+
+				return instance;
+			};
+		}
 
 		// [3] Static methods
 		assign(child, _.pick(parent, parent.staticProperties), {
